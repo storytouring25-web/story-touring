@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Story Touring — เลือกโปรแกรมทัวร์ที่ใช่ แล้วขอใบเสนอราคาได้ทันที</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="คลังโปรแกรมทัวร์เอเชียครบทุกเส้นทาง จีน ญี่ปุ่น เกาหลี เวียดนาม ลาว เมียนมา ค้นหา เปรียบเทียบ และขอใบเสนอราคาได้ในหน้าเดียว">
+<link rel="icon" href="assets/logo-story-touring.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBFCFC;
+    --text:#0F2A2A;
+    --muted:#4A6564;
+    --muted2:#5F7B79;
+    --border:#E6EDEC;
+    --teal:#0B7A70;
+    --teal-dark:#0F6E66;
+    --mint:#40E0D0;
+    --mint-hover:#2ECFBE;
+    --mint-bg:#F1FBFA;
+    --mint-border:#CFEFEB;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:"IBM Plex Sans Thai","Manrope",sans-serif; -webkit-font-smoothing:antialiased; }
+  a{ color:var(--text); text-decoration:none; }
+  a:hover{ color:var(--teal); }
+  input,select,textarea,button{ font-family:inherit; }
+  input:focus,textarea:focus,select:focus{ outline:2px solid var(--mint); outline-offset:1px; }
+  img{ max-width:100%; }
+  button{ font-family:inherit; }
+
+  @keyframes stFade{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
+
+  .wrap{ min-height:100vh; display:flex; flex-direction:column; }
+  .container{ max-width:1200px; margin:0 auto; padding:0 20px; width:100%; }
+
+  /* Header */
+  header.site{ position:sticky; top:0; z-index:40; background:rgba(251,252,252,0.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+  .topbar{ border-bottom:1px solid #EAF3F2; background:#F5FAF9; }
+  .topbar-inner{ max-width:1200px; margin:0 auto; padding:7px 20px; display:flex; flex-wrap:wrap; gap:10px 20px; align-items:center; justify-content:space-between; font-size:12.5px; color:var(--muted2); }
+  .topbar-right{ display:flex; gap:16px; align-items:center; }
+  .topbar-right a{ font-weight:600; }
+
+  .navrow{ max-width:1200px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; gap:20px; }
+  .brand{ display:flex; align-items:center; gap:11px; flex:0 0 auto; }
+  .brand-text{ display:flex; flex-direction:column; gap:3px; }
+  .brand-name{ font-family:'Manrope',sans-serif; font-weight:800; font-size:19px; letter-spacing:0.01em; color:#2AA8A0; line-height:1; }
+  .brand-tag{ font-family:'Manrope',sans-serif; font-weight:500; font-size:10px; letter-spacing:0.22em; color:var(--muted); line-height:1; }
+
+  nav.desktop-nav{ display:flex; align-items:center; gap:2px; margin-left:auto; }
+  .nav-item{ position:relative; }
+  .nav-link{ display:flex; align-items:center; gap:6px; padding:11px 12px; border-radius:10px; font-size:14.5px; font-weight:500; color:var(--text); white-space:nowrap; background:none; border:none; cursor:pointer; }
+  .nav-link:hover{ background:var(--mint-bg); color:var(--teal); }
+  .nav-caret{ font-size:9px; color:var(--teal); }
+  .nav-dropdown{ position:absolute; left:0; top:calc(100% + 8px); width:236px; background:#fff; border:1px solid var(--border); border-radius:16px; box-shadow:0 18px 48px rgba(15,42,42,0.12); padding:8px; animation:stFade .16s ease; }
+  .nav-dropdown a{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:11px 14px; border-radius:10px; font-size:14px; font-weight:500; }
+  .nav-dropdown a:hover{ background:var(--mint-bg); color:var(--text); }
+  .nav-dropdown .note{ font-size:12px; color:var(--muted2); white-space:nowrap; }
+
+  .btn-quote{ margin-left:10px; background:var(--mint); color:#08312D; border:none; border-radius:999px; padding:11px 20px; font-size:14px; font-weight:700; cursor:pointer; min-height:44px; white-space:nowrap; }
+  .btn-quote:hover{ background:var(--mint-hover); }
+
+  .mobile-controls{ margin-left:auto; display:none; align-items:center; gap:8px; }
+  .btn-quote-sm{ background:var(--mint); color:#08312D; border:none; border-radius:999px; padding:0 16px; font-size:13.5px; font-weight:700; cursor:pointer; min-height:44px; white-space:nowrap; }
+  .hamburger{ width:44px; height:44px; border:1px solid var(--border); background:#fff; border-radius:12px; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; }
+  .hamburger span{ width:18px; height:2px; background:var(--text); display:block; }
+
+  .mobile-menu{ display:none; border-top:1px solid var(--border); background:#fff; padding:12px 20px 20px; max-height:70vh; overflow-y:auto; animation:stFade .16s ease; }
+  .mobile-menu.open{ display:block; }
+  .mobile-item{ border-bottom:1px solid #F0F5F4; padding:6px 0; }
+  .mobile-item-head{ display:flex; align-items:center; justify-content:space-between; min-height:48px; font-size:16px; font-weight:600; width:100%; background:none; border:none; cursor:pointer; text-align:left; color:var(--text); }
+  .mobile-item-head .nav-caret{ font-size:11px; }
+  .mobile-sub{ display:none; flex-direction:column; padding:2px 0 10px; }
+  .mobile-sub.open{ display:flex; }
+  .mobile-sub a{ display:flex; align-items:center; justify-content:space-between; gap:10px; min-height:44px; padding:0 12px; border-radius:10px; font-size:15px; color:var(--muted); }
+  .mobile-sub a:hover{ background:var(--mint-bg); }
+  .mobile-sub .note{ font-size:12px; color:var(--muted2); }
+
+  @media (max-width: 1039px){
+    nav.desktop-nav{ display:none; }
+    .mobile-controls{ display:flex; }
+  }
+
+  /* Hero */
+  .hero{ padding:64px 20px 40px; }
+  .hero h1{ font-size:clamp(32px,5.2vw,56px); line-height:1.12; font-weight:700; margin:0; max-width:760px; }
+  .hero p{ font-size:17px; line-height:1.65; color:var(--muted); margin:18px 0 0; max-width:560px; }
+
+  .searchbar{ margin-top:36px; background:#fff; border:1px solid var(--border); border-radius:20px; padding:14px; display:flex; flex-wrap:wrap; gap:10px; box-shadow:0 10px 30px rgba(15,42,42,0.05); }
+  .search-field{ flex:1 1 260px; display:flex; align-items:center; gap:12px; padding:0 8px; }
+  .search-dot{ width:16px; height:16px; border:2px solid var(--teal); border-radius:50%; flex:0 0 auto; }
+  .search-field input{ border:none; width:100%; font-size:16px; padding:12px 0; background:none; color:var(--text); }
+  .country-select{ flex:0 1 200px; min-height:48px; border:1px solid var(--border); background:var(--bg); border-radius:14px; padding:0 14px; font-size:15px; font-weight:500; color:var(--text); cursor:pointer; }
+  .btn-search{ flex:0 0 auto; min-height:48px; padding:0 28px; border:none; border-radius:14px; background:var(--text); color:#fff; font-size:15px; font-weight:700; cursor:pointer; }
+  .btn-search:hover{ background:var(--teal); }
+
+  /* Chips */
+  .chiprow{ display:flex; gap:10px; overflow-x:auto; padding-bottom:6px; }
+  .chip{ flex:0 0 auto; min-height:44px; padding:0 20px; border-radius:999px; border:1px solid var(--border); background:#fff; color:var(--text); font-size:14px; font-weight:600; cursor:pointer; }
+  .chip.active{ background:var(--text); color:#fff; border-color:var(--text); }
+
+  /* Tours */
+  .tours-section{ padding:32px 20px 72px; flex:1; }
+  .tours-head{ display:flex; align-items:baseline; justify-content:space-between; gap:16px; padding:8px 0 22px; border-bottom:1px solid var(--border); }
+  .tours-head h2{ font-size:22px; font-weight:700; margin:0; }
+  .tours-head .count{ font-size:14px; color:var(--muted2); white-space:nowrap; }
+
+  .tours-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(288px,1fr)); gap:22px; margin-top:26px; }
+  .tour-card{ background:#fff; border:1px solid var(--border); border-radius:20px; overflow:hidden; display:flex; flex-direction:column; transition:border-color .15s, box-shadow .15s; }
+  .tour-card:hover{ border-color:var(--mint); box-shadow:0 14px 34px rgba(15,42,42,0.08); }
+  .tour-media{ height:172px; background-image:repeating-linear-gradient(135deg,#EEF6F5 0 10px,#E3EFEE 10px 20px); display:flex; align-items:flex-end; justify-content:space-between; padding:12px; }
+  .tour-slot{ font-family:ui-monospace,Menlo,monospace; font-size:10px; letter-spacing:0.06em; color:#7C9695; background:rgba(255,255,255,0.8); padding:4px 8px; border-radius:6px; }
+  .tour-country{ font-family:'Manrope',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; background:var(--text); color:#fff; padding:5px 10px; border-radius:6px; }
+  .tour-body{ padding:20px; display:flex; flex-direction:column; gap:12px; flex:1; }
+  .tour-body h3{ font-size:18px; font-weight:700; line-height:1.35; margin:0; }
+  .tour-body p{ font-size:14px; line-height:1.6; color:var(--muted); margin:0; }
+  .tour-tags{ display:flex; gap:8px; flex-wrap:wrap; margin-top:auto; }
+  .tour-tags span{ font-size:12px; font-weight:600; color:var(--teal-dark); background:var(--mint-bg); border-radius:6px; padding:5px 9px; }
+  .tour-price{ display:flex; align-items:baseline; gap:8px; border-top:1px solid #EFF4F3; padding-top:14px; }
+  .tour-price .from{ font-size:12px; color:var(--muted2); }
+  .tour-price .amount{ font-family:'Manrope',sans-serif; font-size:18px; font-weight:800; }
+  .tour-price .per{ font-size:12px; color:var(--muted2); }
+
+  .empty-state{ padding:64px 20px; text-align:center; color:var(--muted); display:none; }
+  .empty-state p{ font-size:17px; margin:0 0 16px; }
+  .btn-reset{ min-height:44px; padding:0 20px; border-radius:999px; border:1px solid var(--border); background:#fff; font-size:14px; font-weight:600; cursor:pointer; }
+
+  /* CTA */
+  .cta-band{ background:var(--text); color:#fff; }
+  .cta-inner{ max-width:1200px; margin:0 auto; padding:56px 20px; display:flex; flex-wrap:wrap; align-items:center; gap:28px; }
+  .cta-inner h2{ font-size:clamp(24px,3.4vw,34px); font-weight:700; margin:0 0 12px; line-height:1.25; flex:1 1 340px; }
+  .cta-copy{ font-size:16px; line-height:1.65; color:#A9C6C3; margin:0; max-width:520px; flex:1 1 340px; }
+  .cta-text{ flex:1 1 340px; }
+  .btn-quote-lg{ flex:0 0 auto; min-height:52px; padding:0 30px; border:none; border-radius:999px; background:var(--mint); color:#08312D; font-size:16px; font-weight:700; cursor:pointer; }
+  .btn-quote-lg:hover{ background:var(--mint-hover); }
+
+  /* Footer */
+  footer.site{ background:var(--bg); border-top:1px solid var(--border); }
+  .footer-grid{ max-width:1200px; margin:0 auto; padding:56px 20px 40px; display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:40px 32px; }
+  .footer-col{ display:flex; flex-direction:column; gap:18px; }
+  .footer-col.narrow{ gap:14px; }
+  .footer-logo{ width:200px; height:auto; display:block; }
+  .footer-company{ display:flex; flex-direction:column; gap:9px; font-size:14px; line-height:1.55; color:var(--muted); }
+  .footer-company .name{ font-weight:700; color:var(--text); }
+  .footer-company .hours{ color:var(--teal-dark); font-weight:600; }
+  .footer-heading{ font-family:'Manrope',sans-serif; font-size:12px; font-weight:800; letter-spacing:0.18em; text-transform:uppercase; color:var(--teal); margin:0; }
+  .footer-list{ display:flex; flex-direction:column; gap:10px; font-size:14px; color:var(--muted); }
+  .footer-contact{ display:flex; flex-direction:column; gap:10px; font-size:15px; color:var(--text); }
+  .footer-phone{ font-family:'Manrope',sans-serif; font-weight:700; font-size:19px; }
+  .footer-email{ color:var(--muted); font-size:14px; }
+  .footer-line{ color:var(--muted); font-size:14px; }
+  .qr-row{ display:flex; align-items:center; gap:14px; margin-top:4px; }
+  .qr-box{ width:104px; height:104px; flex:0 0 auto; border:1px solid var(--border); border-radius:14px; background-image:repeating-linear-gradient(135deg,#EEF6F5 0 8px,#E3EFEE 8px 16px); display:flex; align-items:flex-end; padding:7px; }
+  .qr-box span{ font-family:ui-monospace,Menlo,monospace; font-size:9px; color:#7C9695; background:rgba(255,255,255,0.85); padding:3px 6px; border-radius:5px; }
+  .qr-copy{ font-size:13px; line-height:1.5; color:var(--muted); }
+
+  .social-card{ border:1px solid var(--border); border-radius:16px; overflow:hidden; background:#fff; }
+  .social-head{ padding:14px; display:flex; align-items:center; gap:12px; }
+  .social-avatar{ width:40px; height:40px; flex:0 0 auto; border-radius:10px; background:var(--mint-bg); border:1px solid var(--mint-border); }
+  .social-name{ font-size:14px; font-weight:700; }
+  .social-followers{ font-size:12px; color:var(--muted2); }
+  .social-cover{ height:96px; background-image:repeating-linear-gradient(135deg,#EEF6F5 0 8px,#E3EFEE 8px 16px); display:flex; align-items:flex-end; padding:8px; }
+  .social-cover span{ font-family:ui-monospace,Menlo,monospace; font-size:9px; color:#7C9695; background:rgba(255,255,255,0.85); padding:3px 6px; border-radius:5px; }
+  .social-actions{ padding:12px 14px; display:flex; gap:8px; }
+  .btn-follow{ flex:1; text-align:center; min-height:40px; line-height:40px; border-radius:10px; background:var(--mint); color:#08312D; font-size:13px; font-weight:700; }
+  .btn-follow:hover{ background:var(--mint-hover); color:#08312D; }
+  .btn-share{ flex:0 0 auto; padding:0 14px; min-height:40px; line-height:40px; border-radius:10px; border:1px solid var(--border); font-size:13px; font-weight:600; color:var(--muted); }
+  .btn-share:hover{ border-color:var(--mint); }
+
+  .footer-bottom{ max-width:1200px; margin:0 auto; padding:0 20px 36px; }
+  .footer-bottom-inner{ border-top:1px solid var(--border); padding-top:20px; display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between; font-size:13px; color:var(--muted2); }
+
+  /* Quote modal */
+  .modal-overlay{ position:fixed; inset:0; z-index:60; background:rgba(9,32,31,0.44); display:none; align-items:flex-end; justify-content:center; padding:0; }
+  .modal-overlay.open{ display:flex; }
+  .modal-sheet{ background:#fff; width:100%; max-width:760px; max-height:92vh; overflow-y:auto; border-radius:24px 24px 0 0; padding:28px 24px 32px; margin:0 auto; animation:stFade .2s ease; }
+  .modal-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; }
+  .modal-head h2{ font-size:22px; font-weight:700; margin:0 0 6px; }
+  .modal-head p{ font-size:14px; color:var(--muted); margin:0; }
+  .modal-close{ width:44px; height:44px; flex:0 0 auto; border:1px solid var(--border); background:#fff; border-radius:50%; font-size:16px; cursor:pointer; color:var(--muted); }
+
+  .modal-success{ display:none; margin-top:24px; background:var(--mint-bg); border:1px solid var(--mint-border); border-radius:16px; padding:24px; }
+  .modal-success.show{ display:block; }
+  .modal-success .t1{ font-size:16px; font-weight:700; margin:0 0 8px; }
+  .modal-success .t2{ font-size:14px; line-height:1.6; color:var(--muted); margin:0; }
+
+  .modal-form{ display:block; }
+  .modal-form.hide{ display:none; }
+  .form-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(228px,1fr)); gap:14px; margin-top:22px; }
+  .form-grid.compact{ grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-top:14px; }
+  .field{ display:flex; flex-direction:column; gap:7px; font-size:13px; font-weight:600; color:var(--muted); }
+  .field input, .field select, .field textarea{ min-height:46px; border:1px solid var(--border); border-radius:12px; padding:0 14px; font-size:15px; color:var(--text); }
+  .field textarea{ padding:12px 14px; resize:vertical; min-height:auto; }
+  .field select{ background:#fff; cursor:pointer; }
+  .btn-submit{ width:100%; min-height:52px; margin-top:20px; border:none; border-radius:14px; background:var(--mint); color:#08312D; font-size:16px; font-weight:700; cursor:pointer; }
+  .btn-submit:hover{ background:var(--mint-hover); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site">
+    <div class="topbar">
+      <div class="topbar-inner">
+        <span>เลขใบอนุญาต 11/12919</span>
+        <span class="topbar-right">
+          <a href="tel:0863999248">086-399-9248</a>
+          <span style="color:var(--muted2);">LINE @story-touring</span>
+        </span>
+      </div>
+    </div>
+    <div class="navrow">
+      <a href="#" class="brand" id="brandLink">
+        <span class="brand-text">
+          <span class="brand-name">STORY TOURING</span>
+          <span class="brand-tag">EVERYTHING HAS A STORY</span>
+        </span>
+      </a>
+
+      <nav class="desktop-nav" id="desktopNav"></nav>
+
+      <div class="mobile-controls">
+        <button class="btn-quote-sm" id="mobileQuoteBtn">ขอใบเสนอราคา</button>
+        <button class="hamburger" id="hamburgerBtn" aria-label="เปิดเมนู">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-menu" id="mobileMenu"></div>
+  </header>
+
+  <section class="hero container">
+    <h1>เลือกโปรแกรมทัวร์ที่ใช่ แล้วขอใบเสนอราคาได้ทันที</h1>
+    <p>คลังโปรแกรมทัวร์เอเชียครบทุกเส้นทาง จีน ญี่ปุ่น เกาหลี เวียดนาม ลาว เมียนมา — ค้นหา เปรียบเทียบ และส่งคำขอราคาถึงทีมงานได้ในหน้าเดียว</p>
+
+    <div class="searchbar">
+      <div class="search-field">
+        <span class="search-dot"></span>
+        <input type="text" id="searchInput" placeholder="ค้นหาโปรแกรม เช่น โอซาก้า, ฮาลอง, คุนหมิง" />
+      </div>
+      <select class="country-select" id="countrySelect">
+        <option value="all">ทุกประเทศ</option>
+        <option value="China">China · จีน</option>
+        <option value="Japan">Japan · ญี่ปุ่น</option>
+        <option value="Korea">Korea · เกาหลี</option>
+        <option value="Vietnam">Vietnam · เวียดนาม</option>
+        <option value="Laos">Laos · ลาว</option>
+        <option value="Myanmar">Myanmar · เมียนมา</option>
+      </select>
+      <button class="btn-search" id="searchBtn">ค้นหา</button>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="chiprow" id="chipRow"></div>
+  </section>
+
+  <section id="tours" class="tours-section container">
+    <div class="tours-head">
+      <h2 id="toursHeadline">โปรแกรมทัวร์ทั้งหมด</h2>
+      <span class="count" id="resultCount">12 โปรแกรม</span>
+    </div>
+
+    <div class="tours-grid" id="toursGrid"></div>
+
+    <div class="empty-state" id="emptyState">
+      <p>ไม่พบโปรแกรมที่ตรงกับคำค้นหา</p>
+      <button class="btn-reset" id="resetBtn">ดูโปรแกรมทั้งหมด</button>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="cta-inner">
+      <div class="cta-text">
+        <h2>อยากได้โปรแกรมเฉพาะกลุ่มของคุณ?</h2>
+        <p class="cta-copy">ส่งจำนวนผู้เดินทาง วันที่ และงบประมาณมาให้เรา ทีมงาน Story Touring จะจัดเส้นทางและส่งใบเสนอราคากลับภายใน 24 ชั่วโมง</p>
+      </div>
+      <button class="btn-quote-lg" id="ctaQuoteBtn">ขอใบเสนอราคา</button>
+    </div>
+  </section>
+
+  <footer class="site">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <img src="assets/logo-story-touring.png" alt="Story Touring — Everything has a story" class="footer-logo" />
+        <div class="footer-company">
+          <span class="name">บริษัท สตอรี่ทัวริ่ง จำกัด</span>
+          <span>เลขที่ใบอนุญาต 11/12919</span>
+          <span>244 ถนน รามคำแหง ซอย รามคำแหง 58/3<br />แขวง หัวหมาก เขต บางกะปิ กรุงเทพมหานคร 10240</span>
+          <span class="hours">จันทร์–เสาร์ 9.00–18.00</span>
+        </div>
+      </div>
+
+      <div class="footer-col narrow">
+        <h3 class="footer-heading">บริการของเรา</h3>
+        <div class="footer-list">
+          <span>บริการจองตั๋วเครื่องบิน</span>
+          <span>บริการจองที่พัก โรงแรม รีสอร์ท</span>
+          <span>บริการจัดนำเที่ยวต่างประเทศ</span>
+          <span>บริการจัดนำเที่ยวในประเทศ</span>
+          <span>บริการเช่ารถตู้ รถบัสโดยสาร</span>
+          <span>บริการจัดอบรมประชุมสัมมนา</span>
+        </div>
+      </div>
+
+      <div class="footer-col narrow">
+        <h3 class="footer-heading">ติดต่อฝ่ายบริการลูกค้า</h3>
+        <div class="footer-contact">
+          <a href="tel:0863999248" class="footer-phone">086-399-9248</a>
+          <a href="mailto:info@story-touring.com" class="footer-email">info@story-touring.com</a>
+          <span class="footer-line">LINE @story-touring</span>
+        </div>
+        <div class="qr-row">
+          <div class="qr-box"><span>line-qr.png</span></div>
+          <span class="qr-copy">สแกนเพื่อเพิ่มเพื่อน<br />ใน LINE Official</span>
+        </div>
+      </div>
+
+      <div class="footer-col narrow">
+        <h3 class="footer-heading">ติดตามเรา</h3>
+        <div class="social-card">
+          <div class="social-head">
+            <span class="social-avatar"></span>
+            <div>
+              <div class="social-name">Story Touring - TH</div>
+              <div class="social-followers">702 followers</div>
+            </div>
+          </div>
+          <div class="social-cover"><span>fb-cover.jpg</span></div>
+          <div class="social-actions">
+            <a href="https://www.facebook.com/" target="_blank" rel="noopener" class="btn-follow">Follow Page</a>
+            <a href="https://www.facebook.com/" target="_blank" rel="noopener" class="btn-share">Share</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-bottom-inner">
+        <span>© 2026 บริษัท สตอรี่ทัวริ่ง จำกัด · ใบอนุญาตประกอบธุรกิจนำเที่ยว 11/12919</span>
+        <span>Everything has a story</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<div class="modal-overlay" id="quoteOverlay">
+  <div class="modal-sheet">
+    <div class="modal-head">
+      <div>
+        <h2>ขอใบเสนอราคา</h2>
+        <p id="quoteSubject">จัดกรุ๊ปส่วนตัว / สอบถามหลายโปรแกรม</p>
+      </div>
+      <button class="modal-close" id="quoteCloseBtn">✕</button>
+    </div>
+
+    <div class="modal-success" id="quoteSuccess">
+      <p class="t1">ส่งคำขอเรียบร้อยแล้ว</p>
+      <p class="t2">ทีมงานจะติดต่อกลับพร้อมใบเสนอราคาภายใน 24 ชั่วโมงทำการ</p>
+    </div>
+
+    <form class="modal-form" id="quoteForm">
+      <div class="form-grid">
+        <label class="field">ชื่อหน่วยงาน
+          <input type="text" placeholder="บริษัท / โรงเรียน / กลุ่มส่วนตัว" />
+        </label>
+        <label class="field">ชื่อ–นามสกุล ผู้ติดต่อ
+          <input type="text" placeholder="ชื่อ–นามสกุล" required />
+        </label>
+        <label class="field">เบอร์มือถือ
+          <input type="tel" placeholder="08x-xxx-xxxx" required />
+        </label>
+        <label class="field">อีเมล
+          <input type="email" placeholder="name@company.com" />
+        </label>
+        <label class="field">Line ID (ถ้ามี)
+          <input type="text" placeholder="@yourline" />
+        </label>
+        <label class="field">เลือกบริการ
+          <select>
+            <option>เลือก</option>
+            <option>จองตั๋วเครื่องบิน</option>
+            <option>จองที่พัก โรงแรม รีสอร์ท</option>
+            <option>จัดนำเที่ยวต่างประเทศ</option>
+            <option>จัดนำเที่ยวในประเทศ</option>
+            <option>เช่ารถตู้ / รถบัสโดยสาร</option>
+            <option>จัดอบรมประชุมสัมมนา</option>
+          </select>
+        </label>
+        <label class="field">สถานที่ต้นทาง
+          <input type="text" placeholder="เช่น กรุงเทพฯ" />
+        </label>
+        <label class="field">สถานที่ปลายทาง
+          <input type="text" placeholder="เช่น โอซาก้า" />
+        </label>
+      </div>
+
+      <div class="form-grid compact">
+        <label class="field">จำนวนคน
+          <input type="text" placeholder="เช่น 20" />
+        </label>
+        <label class="field">งบประมาณ ต่อคน
+          <input type="text" placeholder="เช่น 25,000 บาท" />
+        </label>
+        <label class="field">ช่วงเวลาที่ต้องการไป
+          <input type="text" placeholder="เช่น เดือนมกราคม" />
+        </label>
+      </div>
+
+      <label class="field" style="margin-top:14px;">หมายเหตุ
+        <textarea rows="3" placeholder="สถานที่ที่อยากไป ข้อจำกัดด้านอาหาร หรือรายละเอียดอื่นๆ"></textarea>
+      </label>
+      <button type="submit" class="btn-submit">ส่งคำขอใบเสนอราคา</button>
+    </form>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var TOURS = [
+    { id:1, country:"China", title:"คุนหมิง–ต้าหลี่–ลี่เจียง 6 วัน", desc:"เมืองโบราณลี่เจียง ภูเขาหิมะมังกรหยก และทะเลสาบเอ๋อไห่", days:"6 วัน 5 คืน", season:"ต.ค.–ก.พ.", price:"฿32,900", slot:"kunming-hero.jpg" },
+    { id:2, country:"China", title:"เฉิงตู–ภูเขาง้อไบ๊ 5 วัน", desc:"หมีแพนด้าวิจัยเฉิงตู พระใหญ่เล่อซาน และถนนโบราณจินหลี่", days:"5 วัน 4 คืน", season:"มี.ค.–พ.ค.", price:"฿29,500", slot:"chengdu-panda.jpg" },
+    { id:3, country:"Japan", title:"โอซาก้า–เกียวโต–นารา 6 วัน", desc:"ศาลเจ้าฟูชิมิอินาริ ปราสาทโอซาก้า และกวางเมืองนารา", days:"6 วัน 4 คืน", season:"มี.ค.–เม.ย.", price:"฿46,900", slot:"kyoto-torii.jpg" },
+    { id:4, country:"Japan", title:"โตเกียว–ฟูจิ–ฮาโกเน่ 5 วัน", desc:"ภูเขาไฟฟูจิชั้น 5 ล่องเรือทะเลสาบอาชิ และชิบูย่า", days:"5 วัน 3 คืน", season:"ทั้งปี", price:"฿42,900", slot:"fuji-lake.jpg" },
+    { id:5, country:"Korea", title:"โซล–เกาะนามิ–ซูวอน 5 วัน", desc:"พระราชวังเคียงบก เกาะนามิใบไม้เปลี่ยนสี และย่านฮงแด", days:"5 วัน 3 คืน", season:"ก.ย.–พ.ย.", price:"฿27,900", slot:"nami-island.jpg" },
+    { id:6, country:"Korea", title:"ปูซาน–คยองจู 5 วัน", desc:"หมู่บ้านคัมชอน วัดแฮดงยงกุงซา และสุสานโบราณคยองจู", days:"5 วัน 4 คืน", season:"เม.ย.–มิ.ย.", price:"฿31,900", slot:"busan-village.jpg" },
+    { id:7, country:"Vietnam", title:"ฮานอย–ฮาลอง–ซาปา 5 วัน", desc:"ล่องเรืออ่าวฮาลอง นาขั้นบันไดซาปา และรถไฟสายเก่า", days:"5 วัน 4 คืน", season:"ต.ค.–มี.ค.", price:"฿19,900", slot:"halong-bay.jpg" },
+    { id:8, country:"Vietnam", title:"ดานัง–ฮอยอัน–บาน่าฮิลล์ 4 วัน", desc:"สะพานมือยักษ์ เมืองเก่าฮอยอัน และตลาดกลางคืนริมน้ำ", days:"4 วัน 3 คืน", season:"ทั้งปี", price:"฿16,900", slot:"hoian-lanterns.jpg" },
+    { id:9, country:"Laos", title:"หลวงพระบาง–วังเวียง 4 วัน", desc:"ตักบาตรข้าวเหนียว น้ำตกกวางสี และล่องแม่น้ำซอง", days:"4 วัน 3 คืน", season:"พ.ย.–ก.พ.", price:"฿18,500", slot:"luangprabang-alms.jpg" },
+    { id:10, country:"Laos", title:"เวียงจันทน์–รถไฟความเร็วสูง 3 วัน", desc:"พระธาตุหลวง ประตูชัย และนั่งรถไฟลาว–จีนสู่หลวงพระบาง", days:"3 วัน 2 คืน", season:"ทั้งปี", price:"฿13,900", slot:"laos-railway.jpg" },
+    { id:11, country:"Myanmar", title:"ย่างกุ้ง–หงสา–สิเรียม 3 วัน", desc:"มหาเจดีย์ชเวดากอง พระธาตุอินทร์แขวน และเจดีย์กลางน้ำ", days:"3 วัน 2 คืน", season:"พ.ย.–ก.พ.", price:"฿15,900", slot:"shwedagon.jpg" },
+    { id:12, country:"Myanmar", title:"มัณฑะเลย์–พุกาม 4 วัน", desc:"ทุ่งเจดีย์พุกามยามเช้า สะพานอูเบ็ง และล่องแม่น้ำอิรวดี", days:"4 วัน 3 คืน", season:"ธ.ค.–ก.พ.", price:"฿22,900", slot:"bagan-sunrise.jpg" }
+  ];
+
+  var NAMES = { China:"จีน", Japan:"ญี่ปุ่น", Korea:"เกาหลี", Vietnam:"เวียดนาม", Laos:"ลาว", Myanmar:"เมียนมา" };
+  var CHIP_ORDER = ["all","China","Japan","Korea","Vietnam","Laos","Myanmar"];
+
+  var state = { query:"", country:"all", openMenu:null, mobileOpen:false };
+
+  var els = {
+    desktopNav: document.getElementById("desktopNav"),
+    mobileMenu: document.getElementById("mobileMenu"),
+    hamburgerBtn: document.getElementById("hamburgerBtn"),
+    mobileQuoteBtn: document.getElementById("mobileQuoteBtn"),
+    ctaQuoteBtn: document.getElementById("ctaQuoteBtn"),
+    chipRow: document.getElementById("chipRow"),
+    toursGrid: document.getElementById("toursGrid"),
+    toursHeadline: document.getElementById("toursHeadline"),
+    resultCount: document.getElementById("resultCount"),
+    emptyState: document.getElementById("emptyState"),
+    resetBtn: document.getElementById("resetBtn"),
+    searchInput: document.getElementById("searchInput"),
+    countrySelect: document.getElementById("countrySelect"),
+    searchBtn: document.getElementById("searchBtn"),
+    brandLink: document.getElementById("brandLink"),
+    quoteOverlay: document.getElementById("quoteOverlay"),
+    quoteSubject: document.getElementById("quoteSubject"),
+    quoteCloseBtn: document.getElementById("quoteCloseBtn"),
+    quoteForm: document.getElementById("quoteForm"),
+    quoteSuccess: document.getElementById("quoteSuccess")
+  };
+
+  function buildMenus(){
+    var dom = ["ภาคเหนือ","ภาคอีสาน","ภาคกลาง–ตะวันตก","ภาคใต้"];
+    var act = ["ดูงาน–สัมมนา","Team Building","CSR–จิตอาสา","Incentive Trip"];
+    return [
+      { key:"home", label:"หน้าหลัก", items:[], onClick:function(e){
+          if(e) e.preventDefault();
+          closeAll();
+          state.country = "all"; state.query = "";
+          els.searchInput.value = ""; els.countrySelect.value = "all";
+          window.scrollTo({ top:0, behavior:"smooth" });
+          render();
+        } },
+      { key:"top", label:"ทัวร์ยอดนิยม", items:[], onClick:goTours },
+      { key:"outbound", label:"ทัวร์ต่างประเทศ", items:Object.keys(NAMES).map(function(k){
+          return {
+            label: k + " · " + NAMES[k],
+            note: TOURS.filter(function(t){ return t.country===k; }).length + " โปรแกรม",
+            select: function(e){ closeAll(); setCountry(k)(e); }
+          };
+        }) },
+      { key:"domestic", label:"ทัวร์ในประเทศ", items:dom.map(function(d){
+          return { label:d, note:"ขอราคา", select:function(e){ closeAll(); openQuote("ทัวร์ในประเทศ · " + d)(e); } };
+        }) },
+      { key:"activity", label:"ทัวร์กิจกรรม", items:act.map(function(a){
+          return { label:a, note:"ขอราคา", select:function(e){ closeAll(); openQuote("ทัวร์กิจกรรม · " + a)(e); } };
+        }) },
+      { key:"articles", label:"บทความ", items:[], onClick:function(e){ if(e) e.preventDefault(); closeAll(); } },
+      { key:"gallery", label:"ภาพประทับใจ", items:[], onClick:function(e){ if(e) e.preventDefault(); closeAll(); } }
+    ];
+  }
+
+  function closeAll(){ state.openMenu=null; state.mobileOpen=false; }
+
+  function goTours(e){
+    if(e) e.preventDefault();
+    closeAll();
+    render();
+    var el = document.getElementById("tours");
+    if(el) window.scrollTo({ top: el.offsetTop - 120, behavior:"smooth" });
+  }
+
+  function setCountry(c){
+    return function(e){
+      if(e) e.preventDefault();
+      state.country = c;
+      els.countrySelect.value = c;
+      render();
+      var el = document.getElementById("tours");
+      if(el) window.scrollTo({ top: el.offsetTop - 80, behavior:"smooth" });
+    };
+  }
+
+  function openQuote(subject){
+    return function(e){
+      if(e) e.preventDefault();
+      els.quoteSubject.textContent = subject || "จัดกรุ๊ปส่วนตัว / สอบถามหลายโปรแกรม";
+      els.quoteForm.classList.remove("hide");
+      els.quoteSuccess.classList.remove("show");
+      els.quoteForm.reset();
+      els.quoteOverlay.classList.add("open");
+      document.body.style.overflow = "hidden";
+    };
+  }
+
+  function closeQuote(){
+    els.quoteOverlay.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  function filteredTours(){
+    var q = state.query.trim().toLowerCase();
+    return TOURS.filter(function(t){
+      var okC = state.country === "all" || t.country === state.country;
+      var okQ = !q || (t.title + t.desc + t.country + (NAMES[t.country]||"")).toLowerCase().indexOf(q) !== -1;
+      return okC && okQ;
+    });
+  }
+
+  function renderDesktopNav(menus){
+    els.desktopNav.innerHTML = "";
+    menus.forEach(function(m){
+      var wrap = document.createElement("div");
+      wrap.className = "nav-item";
+
+      var link = document.createElement("button");
+      link.type = "button";
+      link.className = "nav-link";
+      link.innerHTML = "<span>" + m.label + "</span>" + (m.items.length ? "<span class=\"nav-caret\">▾</span>" : "");
+      link.addEventListener("click", function(e){
+        if(m.items.length){
+          e.preventDefault();
+          e.stopPropagation();
+          state.openMenu = state.openMenu === m.key ? null : m.key;
+          render();
+        } else {
+          m.onClick(e);
+        }
+      });
+      wrap.appendChild(link);
+
+      if(m.items.length && state.openMenu === m.key){
+        var dd = document.createElement("div");
+        dd.className = "nav-dropdown";
+        m.items.forEach(function(i){
+          var a = document.createElement("a");
+          a.href = "#";
+          a.innerHTML = "<span>" + i.label + "</span><span class=\"note\">" + i.note + "</span>";
+          a.addEventListener("click", i.select);
+          dd.appendChild(a);
+        });
+        wrap.appendChild(dd);
+      }
+
+      els.desktopNav.appendChild(wrap);
+    });
+  }
+
+  function renderMobileNav(menus){
+    els.mobileMenu.innerHTML = "";
+    els.mobileMenu.classList.toggle("open", state.mobileOpen);
+
+    menus.forEach(function(m){
+      var item = document.createElement("div");
+      item.className = "mobile-item";
+
+      var head = document.createElement("button");
+      head.type = "button";
+      head.className = "mobile-item-head";
+      head.innerHTML = "<span>" + m.label + "</span>" + (m.items.length ? "<span class=\"nav-caret\">▾</span>" : "");
+      head.addEventListener("click", function(e){
+        if(m.items.length){
+          e.stopPropagation();
+          state.openMenu = state.openMenu === m.key ? null : m.key;
+          render();
+        } else {
+          m.onClick(e);
+        }
+      });
+      item.appendChild(head);
+
+      if(m.items.length){
+        var sub = document.createElement("div");
+        sub.className = "mobile-sub" + (state.openMenu === m.key ? " open" : "");
+        m.items.forEach(function(i){
+          var a = document.createElement("a");
+          a.href = "#";
+          a.innerHTML = "<span>" + i.label + "</span><span class=\"note\">" + i.note + "</span>";
+          a.addEventListener("click", function(e){ state.mobileOpen=false; i.select(e); });
+          sub.appendChild(a);
+        });
+        item.appendChild(sub);
+      }
+
+      els.mobileMenu.appendChild(item);
+    });
+  }
+
+  function renderChips(){
+    els.chipRow.innerHTML = "";
+    CHIP_ORDER.forEach(function(k){
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "chip" + (state.country === k ? " active" : "");
+      btn.textContent = k === "all" ? "ทั้งหมด" : k + " · " + NAMES[k];
+      btn.addEventListener("click", setCountry(k));
+      els.chipRow.appendChild(btn);
+    });
+  }
+
+  function renderTours(){
+    var list = filteredTours();
+    var sel = state.country;
+
+    els.toursHeadline.textContent = sel === "all" ? "โปรแกรมทัวร์ทั้งหมด" : "ทัวร์" + NAMES[sel] + " · " + sel;
+    els.resultCount.textContent = list.length + " โปรแกรม";
+
+    els.toursGrid.innerHTML = "";
+    els.toursGrid.style.display = list.length ? "grid" : "none";
+    els.emptyState.style.display = list.length ? "none" : "block";
+
+    list.forEach(function(t){
+      var card = document.createElement("article");
+      card.className = "tour-card";
+      card.innerHTML =
+        '<div class="tour-media">' +
+          '<span class="tour-slot">' + t.slot + '</span>' +
+          '<span class="tour-country">' + t.country + '</span>' +
+        '</div>' +
+        '<div class="tour-body">' +
+          '<h3>' + t.title + '</h3>' +
+          '<p>' + t.desc + '</p>' +
+          '<div class="tour-tags"><span>' + t.days + '</span><span>' + t.season + '</span></div>' +
+          '<div class="tour-price"><span class="from">เริ่มต้น</span><span class="amount">' + t.price + '</span><span class="per">/ ท่าน</span></div>' +
+        '</div>';
+      card.addEventListener("click", openQuote(t.title));
+      card.style.cursor = "pointer";
+      els.toursGrid.appendChild(card);
+    });
+  }
+
+  function render(){
+    var menus = buildMenus();
+    renderDesktopNav(menus);
+    renderMobileNav(menus);
+    renderChips();
+    renderTours();
+  }
+
+  // Static event bindings
+  els.hamburgerBtn.addEventListener("click", function(){
+    state.mobileOpen = !state.mobileOpen;
+    state.openMenu = null;
+    render();
+  });
+
+  els.mobileQuoteBtn.addEventListener("click", openQuote());
+  els.ctaQuoteBtn.addEventListener("click", openQuote());
+  els.quoteCloseBtn.addEventListener("click", closeQuote);
+  els.quoteOverlay.addEventListener("click", function(e){ if(e.target === els.quoteOverlay) closeQuote(); });
+
+  els.brandLink.addEventListener("click", function(e){
+    e.preventDefault();
+    closeAll();
+    state.country = "all"; state.query = "";
+    els.searchInput.value = ""; els.countrySelect.value = "all";
+    window.scrollTo({ top:0, behavior:"smooth" });
+    render();
+  });
+
+  els.searchInput.addEventListener("input", function(e){ state.query = e.target.value; renderTours(); });
+  els.countrySelect.addEventListener("change", function(e){ state.country = e.target.value; render(); });
+  els.searchBtn.addEventListener("click", goTours);
+  els.resetBtn.addEventListener("click", function(){
+    state.country = "all"; state.query = "";
+    els.searchInput.value = ""; els.countrySelect.value = "all";
+    render();
+  });
+
+  els.quoteForm.addEventListener("submit", function(e){
+    e.preventDefault();
+    els.quoteForm.classList.add("hide");
+    els.quoteSuccess.classList.add("show");
+  });
+
+  document.addEventListener("click", function(e){
+    if(state.openMenu === null) return;
+    if(!els.desktopNav.contains(e.target) && !els.mobileMenu.contains(e.target)){
+      state.openMenu = null;
+      render();
+    }
+  });
+
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && els.quoteOverlay.classList.contains("open")) closeQuote();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
